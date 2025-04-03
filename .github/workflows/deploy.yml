@@ -31,7 +31,7 @@ jobs:
             
             # Clone repo if not exists
             if [ ! -d ".git" ]; then
-              git clone https://github.com/your-username/your-repo.git .
+              git clone https://github.com/mosesimbahale0/HandcraftedMasterpiece.git .
             fi
 
             # Update code
