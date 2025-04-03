@@ -340,3 +340,18 @@ docker tag app-web:current app-web:previous
 **Important Note: Always test your deployment pipeline in a staging environment before production use!**
 
 
+
+
+
+
+
+
+
+
+# SSH 
+ssh -i <path_to_private_key> vmusername@vmpublicip
+
+- PROTECT SSH
+chmod 600 ~/Desktop/SSH/ssh-key-2025-04-03.key
+
+
