@@ -2,38 +2,45 @@ name: Deploy
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the latest code
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      # Optional: Build Docker images locally if needed
-      # You can build and push images to a registry here
-      # - name: Build and push Docker images
-      #   run: |
-      #     docker build -t my-image:latest client/
-      #     docker build -t my-server:latest server/
-      #   env:
-      #     DOCKER_BUILDKIT: 1
-
-      # Deploy via SSH using appleboy/ssh-action
-      - name: Deploy to VM via SSH
-        uses: appleboy/ssh-action@v0.1.10
+      - name: Deploy to VM
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.GCP_SSH_HOST }}
           username: ${{ secrets.GCP_SSH_USERNAME }}
           key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
           port: 22
           script: |
+            # Verify deployment directory exists
+            if [ ! -d "${{ secrets.DEPLOYMENT_PATH }}" ]; then
+              echo "Creating deployment directory..."
+              sudo mkdir -p ${{ secrets.DEPLOYMENT_PATH}}
+              sudo chown -R $USER:$USER ${{ secrets.DEPLOYMENT_PATH}}
+            fi
+
             cd ${{ secrets.DEPLOYMENT_PATH }}
-            # Update the repository (or pull the latest changes)
+            
+            # Clone repo if not exists
+            if [ ! -d ".git" ]; then
+              git clone https://github.com/your-username/your-repo.git .
+            fi
+
+            # Update code
+            git fetch --all
+            git reset --hard origin/main
             git pull origin main
-            # Rebuild and restart your services with docker-compose
-            sudo docker-compose -f docker-compose.yml up -d --build
+
+            # Docker commands without sudo
+            docker-compose -f docker-compose.yml down
+            docker-compose -f docker-compose.yml up -d --build
+
+            
