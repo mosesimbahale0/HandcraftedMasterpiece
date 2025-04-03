@@ -10,6 +10,7 @@ services:
       - MONGODB_URI=${MONGODB_URI}
     ports:
       - "4000:4000" # Bind to localhost
+    restart: always  
     networks:
       - default
 
@@ -22,6 +23,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000" # Expose the client publicly
+    restart: always   
     depends_on:
       - server
     networks:

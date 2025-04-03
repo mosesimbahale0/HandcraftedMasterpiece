@@ -1,0 +1,39 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the latest code
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Optional: Build Docker images locally if needed
+      # You can build and push images to a registry here
+      # - name: Build and push Docker images
+      #   run: |
+      #     docker build -t my-image:latest client/
+      #     docker build -t my-server:latest server/
+      #   env:
+      #     DOCKER_BUILDKIT: 1
+
+      # Deploy via SSH using appleboy/ssh-action
+      - name: Deploy to VM via SSH
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.GCP_SSH_HOST }}
+          username: ${{ secrets.GCP_SSH_USERNAME }}
+          key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd ${{ secrets.DEPLOYMENT_PATH }}
+            # Update the repository (or pull the latest changes)
+            git pull origin main
+            # Rebuild and restart your services with docker-compose
+            sudo docker-compose -f docker-compose.yml up -d --build
