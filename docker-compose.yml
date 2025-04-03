@@ -1,0 +1,35 @@
+services:
+
+  # SERVER
+  #---------------------------------------------------------------------------------------------------------------------------------------
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    environment:
+      - MONGODB_URI=${MONGODB_URI}
+    ports:
+      - "4000:4000" # Bind to localhost
+    networks:
+      - default
+
+
+  # CLIENT
+  #---------------------------------------------------------------------------------------------------------------------------------------
+  web:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000" # Expose the client publicly
+    depends_on:
+      - server
+    networks:
+      - default
+
+
+# NETWORKS
+#---------------------------------------------------------------------------------------------------------------------------------------
+networks:
+  default:
+    driver: bridge
