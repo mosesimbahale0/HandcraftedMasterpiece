@@ -369,9 +369,6 @@ SS;L SETUP - LET'S ENCRYPT
 ```
 ssh-keygen -t ed25519 -C "your_email@example.com"
 
-
-
-
 ```
 
 3.  Ensure Correct Permissions
@@ -446,6 +443,21 @@ sudo nano .env
 
 ```
 
+
+6.1. Configure VM : Passwordless Sudo:
+
+```
+sudo visudo
+
+```
+Run whoami for username
+
+```
+moseimbahale ALL=(ALL) NOPASSWD: ALL
+
+```
+
+
 7. Configure Nginx - Edit your Nginx config on the VM
 
 ```
@@ -485,3 +497,15 @@ sudo certbot --nginx
 
 ```
 
+10. Configure VM : Passwordless Sudo:
+
+```
+sudo visudo
+
+```
+Run whoami for username
+
+```
+moseimbahale ALL=(ALL) NOPASSWD: ALL
+
+```
