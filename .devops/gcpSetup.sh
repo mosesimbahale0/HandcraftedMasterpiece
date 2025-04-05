@@ -33,4 +33,7 @@ tree --version
 
 echo "Setup completed successfully!"
 
-
+# Add user to Docker group and switch group
+echo "Adding user to Docker group..."
+sudo usermod -aG docker $USER
+newgrp docker

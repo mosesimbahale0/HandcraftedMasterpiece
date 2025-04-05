@@ -356,3 +356,132 @@ chmod 600 ~/Desktop/SSH/ssh-key-2025-04-03.key
 
 
 SS;L SETUP - LET'S ENCRYPT
+
+
+
+
+
+
+# GCP VIRTUAL MACHINE CI/CD
+
+1. Create VM
+2. Add ssh keys
+```
+ssh-keygen -t ed25519 -C "your_email@example.com"
+
+
+
+
+```
+
+3.  Ensure Correct Permissions
+```
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/id_ed25519
+chmod 644 ~/.ssh/id_ed25519.pub
+```
+
+4. Acces the Private Key and Add to Actions
+```
+cat ~/.ssh/id_ed25519
+
+```
+
+5. Install Prereqs.
+
+```
+#!/bin/bash
+
+# Update and install prerequisites
+echo "Installing prerequisites..."
+sudo apt update && sudo apt install -y \
+  apt-transport-https \
+  ca-certificates \
+  curl \
+  software-properties-common \
+  nginx \
+  tree\
+  git
+
+# Install Docker and Docker Compose
+echo "Installing Docker and Docker Compose..."
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/debian bookworm stable"
+sudo apt update && sudo apt install -y docker-ce docker-compose
+
+
+# Start Docker and Nginx services
+echo "Starting Docker and Nginx..."
+sudo systemctl start docker
+sudo systemctl start nginx
+
+# Verify installations
+echo "Verifying installations..."
+docker --version
+docker-compose --version
+nginx -v
+git -v
+tree --version
+
+echo "Setup completed successfully!"
+
+# Add user to Docker group and switch group
+echo "Adding user to Docker group..."
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+
+---
+
+6. Deploy 
+
+```
+ mkdir HandcraftedMasterpiece
+
+```
+
+```
+sudo nano .env
+
+```
+
+7. Configure Nginx - Edit your Nginx config on the VM
+
+```
+sudo nano /etc/nginx/sites-available/default
+
+```
+
+Replace with:
+ mkdir HandcraftedMasterpiece
+```
+server {
+    listen 80;
+
+    # Route all traffic to frontend running on port 3000
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        try_files $uri $uri/ /index.html;
+    }
+}
+
+
+```
+
+
+8. Prepare Domain & Point to the non-ephemeral IP (External IP)
+
+
+9.  Enable HTTPS with Certbot (Let's Encrypt)
+```
+sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx
+
+
+```
+
