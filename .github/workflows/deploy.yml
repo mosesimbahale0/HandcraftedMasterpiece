@@ -23,15 +23,12 @@ jobs:
             #!/bin/bash
             set -e
 
-            # # Set deployment directory from secret
-            # DEPLOY_DIR="${{ secrets.DEPLOYMENT_PATH }}"
+            # Set deployment directory from secret
+            DEPLOY_DIR="${{ secrets.DEPLOYMENT_PATH }}"
             
-            # # Create directory with proper permissions
-            # mkdir -p "$DEPLOY_DIR" || true
-            # sudo chown -R "$USER:$USER" "$DEPLOY_DIR"
-            
-            # # Navigate to directory
-            # cd "$DEPLOY_DIR"
+            # Create directory (ensure SSH user has write permissions to this path)
+            mkdir -p "$DEPLOY_DIR"
+            cd "$DEPLOY_DIR"
             
             # Clone or update repository using secure authentication
             if [ ! -d ".git" ]; then
@@ -63,6 +60,6 @@ jobs:
               exit 1
             fi
 
-            # Docker deployment with environment file
+            # Docker deployment (ensure SSH user is in the 'docker' group)
             docker compose --env-file .env down
             docker compose --env-file .env up -d --build
