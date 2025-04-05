@@ -35,7 +35,7 @@ MONGODB_URI="your_mongodb_uri"
 ```
 
 - Start the containers:
-  `docker compose --env-file .env up`
+  `docker compose --env-file .env up -d`
 
 
 # Start with PM2 on VM
@@ -355,3 +355,4 @@ ssh -i <path_to_private_key> vmusername@vmpublicip
 chmod 600 ~/Desktop/SSH/ssh-key-2025-04-03.key
 
 
+SS;L SETUP - LET'S ENCRYPT

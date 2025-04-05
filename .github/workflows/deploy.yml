@@ -20,21 +20,24 @@ jobs:
           key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
           port: 22
           script: |
+            #!/bin/bash
+            set -e
+
             # Set deployment directory from secret
             DEPLOY_DIR="${{ secrets.DEPLOYMENT_PATH }}"
             
             # Create directory with proper permissions
-            mkdir -p ${DEPLOY_DIR} || true
-            sudo chown -R $USER:$USER ${DEPLOY_DIR}
+            mkdir -p "$DEPLOY_DIR" || true
+            sudo chown -R "$USER:$USER" "$DEPLOY_DIR"
             
             # Navigate to directory
-            cd ${DEPLOY_DIR}
+            cd "$DEPLOY_DIR"
             
             # Clone or update repository using secure authentication
             if [ ! -d ".git" ]; then
-              git clone https://${{ github.actor}}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git .
+              git clone https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git .
             else
-              git config --global --add safe.directory ${DEPLOY_DIR}
+              git config --global --add safe.directory "$DEPLOY_DIR"
               git fetch --all
               git reset --hard origin/main
               git clean -fd
@@ -63,54 +66,3 @@ jobs:
             # Docker deployment with environment file
             docker compose --env-file .env down
             docker compose --env-file .env up -d --build
-
-
-
-
-
-
-# name: Deploy
-
-# on:
-#   push:
-#     branches: [main]
-
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v4
-
-#       - name: Deploy to VM
-#         uses: appleboy/ssh-action@v1.0.3
-#         with:
-#           host: ${{ secrets.GCP_SSH_HOST }}
-#           username: ${{ secrets.GCP_SSH_USERNAME }}
-#           key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
-#           port: 22
-#           script: |
-#             # Verify deployment directory exists
-#             if [ ! -d "${{ secrets.DEPLOYMENT_PATH }}" ]; then
-#               echo "Creating deployment directory..."
-#               sudo mkdir -p ${{ secrets.DEPLOYMENT_PATH}}
-#               sudo chown -R $USER:$USER ${{ secrets.DEPLOYMENT_PATH}}
-#             fi
-
-#             cd ${{ secrets.DEPLOYMENT_PATH }}
-            
-#             # Clone repo if not exists
-#             if [ ! -d ".git" ]; then
-#               git clone https://github.com/mosesimbahale0/HandcraftedMasterpiece.git .
-#             fi
-
-#             # Update code
-#             git fetch --all
-#             git reset --hard origin/main
-#             git pull origin main
-
-#             # Docker commands without sudo
-#             docker-compose -f docker-compose.yml down
-#             docker-compose -f docker-compose.yml up -d --build
-
