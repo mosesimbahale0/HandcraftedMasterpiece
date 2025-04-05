@@ -444,6 +444,8 @@ sudo nano .env
 ```
 
 
+
+
 6.1. Configure VM : Passwordless Sudo:
 
 ```
