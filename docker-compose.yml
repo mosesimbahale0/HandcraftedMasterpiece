@@ -1,6 +1,19 @@
 services:
+  # REVERSE PROXY (NGINX)
+  #---------------------------------------------------------------------------------------------------------------------------------------
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - web
+    restart: always
+    networks:
+      - default
 
-  # SERVER
+  # SERVER (Internal only)
   #---------------------------------------------------------------------------------------------------------------------------------------
   server:
     build:
@@ -8,12 +21,9 @@ services:
       dockerfile: Dockerfile
     environment:
       - MONGODB_URI=${MONGODB_URI}
-    ports:
-      - "4000:4000" # Bind to localhost
-    restart: always  
     networks:
       - default
-
+    # No ports exposed externally
 
   # CLIENT
   #---------------------------------------------------------------------------------------------------------------------------------------
@@ -21,17 +31,58 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
-    ports:
-      - "3000:3000" # Expose the client publicly
-    restart: always   
+    # No ports exposed externally (only through Nginx)
     depends_on:
       - server
     networks:
       - default
 
-
-# NETWORKS
-#---------------------------------------------------------------------------------------------------------------------------------------
 networks:
   default:
     driver: bridge
+
+
+
+
+
+
+
+
+
+# services:
+
+#   # SERVER
+#   #---------------------------------------------------------------------------------------------------------------------------------------
+#   server:
+#     build:
+#       context: ./server
+#       dockerfile: Dockerfile
+#     environment:
+#       - MONGODB_URI=${MONGODB_URI}
+#     ports:
+#       - "4000:4000" # Bind to localhost
+#     restart: always  
+#     networks:
+#       - default
+
+
+#   # CLIENT
+#   #---------------------------------------------------------------------------------------------------------------------------------------
+#   web:
+#     build:
+#       context: ./client
+#       dockerfile: Dockerfile
+#     ports:
+#       - "3000:3000" # Expose the client publicly
+#     restart: always   
+#     depends_on:
+#       - server
+#     networks:
+#       - default
+
+
+# # NETWORKS
+# #---------------------------------------------------------------------------------------------------------------------------------------
+# networks:
+#   default:
+#     driver: bridge

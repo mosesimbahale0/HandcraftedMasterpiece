@@ -384,6 +384,12 @@ cat ~/.ssh/id_ed25519
 
 ```
 
+4.1. Access Public Key and Add to Github 
+```
+cat ~/.ssh/id_ed25519.pub
+
+```
+
 5. Install Prereqs.
 
 ```
@@ -455,12 +461,12 @@ sudo visudo
 Run whoami for username
 
 ```
-moseimbahale ALL=(ALL) NOPASSWD: ALL
+moseimbahale0 ALL=(ALL) NOPASSWD: ALL
 
 ```
 
 
-7. Configure Nginx - Edit your Nginx config on the VM
+<!-- 7. Configure Nginx - Edit your Nginx config on the VM
 
 ```
 sudo nano /etc/nginx/sites-available/default
@@ -485,7 +491,7 @@ server {
 }
 
 
-```
+``` -->
 
 
 8. Prepare Domain & Point to the non-ephemeral IP (External IP)
