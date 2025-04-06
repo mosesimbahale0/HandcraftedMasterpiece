@@ -61,8 +61,9 @@ jobs:
             fi
 
             # Build and deploy
-            docker compose --env-file .env build --no-cache
-            docker compose --env-file .env up -d --force-recreate
+            docker compose config
+            docker compose build --no-cache
+            docker compose up -d --force-recreate
 
 
             
