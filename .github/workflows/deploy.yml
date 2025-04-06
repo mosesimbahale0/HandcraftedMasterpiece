@@ -23,10 +23,12 @@ jobs:
             #!/bin/bash
             set -e
 
-            # Set deployment directory from secret
-            DEPLOY_DIR="${{ secrets.DEPLOYMENT_PATH }}"
+            # Automatically derive deployment directory from the repository name.
+            # For example, if GITHUB_REPOSITORY is "mosesimbahale0/HandcraftedMasterpiece",
+            # then DEPLOY_DIR becomes "HandcraftedMasterpiece".
+            DEPLOY_DIR="${GITHUB_REPOSITORY##*/}"
             
-            # Create directory (ensure SSH user has write permissions to this path)
+            # Create the directory (ensure SSH user has write permissions to this path)
             mkdir -p "$DEPLOY_DIR"
             cd "$DEPLOY_DIR"
             
@@ -63,3 +65,89 @@ jobs:
             # Docker deployment (ensure SSH user is in the 'docker' group)
             docker compose --env-file .env down
             docker compose --env-file .env up -d --build
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# name: Deploy
+
+# on:
+#   push:
+#     branches: [main]
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+
+#       - name: Deploy to VM
+#         uses: appleboy/ssh-action@v1.0.3
+#         with:
+#           host: ${{ secrets.GCP_SSH_HOST }}
+#           username: ${{ secrets.GCP_SSH_USERNAME }}
+#           key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
+#           port: 22
+#           script: |
+#             #!/bin/bash
+#             set -e
+
+#             # Set deployment directory from secret
+#             DEPLOY_DIR="${{ secrets.DEPLOYMENT_PATH }}"
+            
+#             # Create directory (ensure SSH user has write permissions to this path)
+#             mkdir -p "$DEPLOY_DIR"
+#             cd "$DEPLOY_DIR"
+            
+#             # Clone or update repository using secure authentication
+#             if [ ! -d ".git" ]; then
+#               git clone https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git .
+#             else
+#               git config --global --add safe.directory "$DEPLOY_DIR"
+#               git fetch --all
+#               git reset --hard origin/main
+#               git clean -fd
+#             fi
+
+#             # Create .env file from secrets
+#             echo "Creating environment file..."
+#             cat <<EOF > .env
+#             MONGODB_URI=${{ secrets.MONGODB_URI }}
+#             NODE_ENV=production
+#             PORT=4000
+#             REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
+#             EOF
+
+#             # Verify critical files exist
+#             if [ ! -f "docker-compose.yml" ]; then
+#               echo "Error: docker-compose.yml not found!"
+#               exit 1
+#             fi
+
+#             if [ ! -f ".env" ]; then
+#               echo "Error: .env file not created!"
+#               exit 1
+#             fi
+
+#             # Docker deployment (ensure SSH user is in the 'docker' group)
+#             docker compose --env-file .env down
+#             docker compose --env-file .env up -d --build
