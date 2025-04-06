@@ -23,12 +23,11 @@ jobs:
             #!/bin/bash
             set -e
 
-            # Automatically derive deployment directory from the repository name.
-            # For example, if GITHUB_REPOSITORY is "mosesimbahale0/HandcraftedMasterpiece",
-            # then DEPLOY_DIR becomes "HandcraftedMasterpiece".
-            DEPLOY_DIR="${GITHUB_REPOSITORY##*/}"
+            # Extract repository name from GitHub context variable
+            DEPLOY_DIR="${{ github.repository }}"
+            DEPLOY_DIR="${DEPLOY_DIR##*/}"
             
-            # Create the directory (ensure SSH user has write permissions to this path)
+            # Create the directory
             mkdir -p "$DEPLOY_DIR"
             cd "$DEPLOY_DIR"
             
@@ -62,7 +61,7 @@ jobs:
               exit 1
             fi
 
-            # Docker deployment (ensure SSH user is in the 'docker' group)
+            # Docker deployment
             docker compose --env-file .env down
             docker compose --env-file .env up -d --build
 
