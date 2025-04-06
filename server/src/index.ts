@@ -41,6 +41,8 @@
 //   });
 // })();
 
+
+
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
@@ -298,19 +300,19 @@ connectToDb();
 
 setInterval(() => {
   const memoryUsage = process.memoryUsage();
-  console.log(`Memory Usage: 
-    RSS: ${(memoryUsage.rss / 1024 / 1024).toFixed(2)} MB
-    Heap Total: ${(memoryUsage.heapTotal / 1024 / 1024).toFixed(2)} MB
-    Heap Used: ${(memoryUsage.heapUsed / 1024 / 1024).toFixed(2)} MB
-    External: ${(memoryUsage.external / 1024 / 1024).toFixed(2)} MB`);
+  // console.log(`Memory Usage: 
+  //   RSS: ${(memoryUsage.rss / 1024 / 1024).toFixed(2)} MB
+  //   Heap Total: ${(memoryUsage.heapTotal / 1024 / 1024).toFixed(2)} MB
+  //   Heap Used: ${(memoryUsage.heapUsed / 1024 / 1024).toFixed(2)} MB
+  //   External: ${(memoryUsage.external / 1024 / 1024).toFixed(2)} MB`);
 }, 5000); // Log memory usage every 5 seconds
 
 const used = process.memoryUsage();
-console.log(`Memory Usage ++++++++++++++:
-  RSS: ${(used.rss / 1024 / 1024).toFixed(2)} MB
-  Heap Total: ${(used.heapTotal / 1024 / 1024).toFixed(2)} MB
-  Heap Used: ${(used.heapUsed / 1024 / 1024).toFixed(2)} MB
-  External: ${(used.external / 1024 / 1024).toFixed(2)} MB`);
+// console.log(`Memory Usage ++++++++++++++:
+//   RSS: ${(used.rss / 1024 / 1024).toFixed(2)} MB
+//   Heap Total: ${(used.heapTotal / 1024 / 1024).toFixed(2)} MB
+//   Heap Used: ${(used.heapUsed / 1024 / 1024).toFixed(2)} MB
+//   External: ${(used.external / 1024 / 1024).toFixed(2)} MB`);
 
 // const PORT = process.env.PORT || 4000;
 const PORT =  4000;
