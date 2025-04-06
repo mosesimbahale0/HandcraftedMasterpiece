@@ -517,3 +517,4 @@ Run whoami for username
 moseimbahale ALL=(ALL) NOPASSWD: ALL
 
 ```
+
