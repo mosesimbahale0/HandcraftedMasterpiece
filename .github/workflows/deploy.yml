@@ -25,17 +25,22 @@ jobs:
 
             DEPLOY_DIR="${{ github.repository }}"
             DEPLOY_DIR="${DEPLOY_DIR##*/}"
-            
+
+            # Clean existing deployment if present
+            if [ -d "$DEPLOY_DIR" ]; then
+              cd "$DEPLOY_DIR"
+              docker compose down --rmi all --volumes --remove-orphans || true
+              cd ..
+              rm -rf "$DEPLOY_DIR"
+            fi
+
+            # Create fresh directory structure
             mkdir -p "$DEPLOY_DIR"
             cd "$DEPLOY_DIR"
 
-            # Clean existing containers and images
-            docker compose down --rmi all --volumes --remove-orphans || true
-
             # Clone fresh repository copy
-            rm -rf .git # Remove existing git data
             git clone https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git .
-            
+
             # Create .env from secrets
             echo "Generating .env file..."
             cat << EOF > .env
@@ -45,20 +50,19 @@ jobs:
             PORT=4000
             EOF
 
-            # Set strict permissions
+            # Secure environment file
             chmod 600 .env
 
-            # Verify Docker can read .env
+            # Validate Docker configuration
             if ! docker compose config --env-file .env > /dev/null 2>&1; then
               echo "❌ Docker Compose config validation failed!"
               docker compose config --env-file .env
               exit 1
             fi
 
-            # Build with no cache and explicit env-file
+            # Build and deploy
             docker compose --env-file .env build --no-cache
             docker compose --env-file .env up -d --force-recreate
-
 
 
             
