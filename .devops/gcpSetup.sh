@@ -7,7 +7,6 @@ sudo apt update && sudo apt install -y \
   ca-certificates \
   curl \
   software-properties-common \
-  nginx \
   tree\
   git
 
@@ -18,16 +17,15 @@ sudo add-apt-repository "deb [arch=$(dpkg --print-architecture)] https://downloa
 sudo apt update && sudo apt install -y docker-ce docker-compose
 
 
-# Start Docker and Nginx services
-echo "Starting Docker and Nginx..."
+# Start Docker  services
+echo "Starting Docker ..."
 sudo systemctl start docker
-sudo systemctl start nginx
 
 # Verify installations
 echo "Verifying installations..."
 docker --version
 docker-compose --version
-nginx -v
+
 git -v
 tree --version
 
