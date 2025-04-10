@@ -345,6 +345,8 @@ docker tag app-web:current app-web:previous
 
 
 
+
+
 # SSH 
 ssh -i <path_to_private_key> vmusername@vmpublicip
 
