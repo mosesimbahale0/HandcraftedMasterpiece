@@ -451,11 +451,6 @@ cat ~/.ssh/id_ed25519
 
 
 
-
-4.1. Access Public Key and Add to Github 
-```
-cat ~/.ssh/id_ed25519.pub
-
 ```
 
 5. Install Prereqs.
@@ -565,6 +560,9 @@ server {
 
 8. Prepare Domain & Point to the non-ephemeral IP (External IP)
 
+### Domain Registration
+https://cloud.google.com/domains/docs/register-domain?_gl=1*17jgmcz*_ga*MTk0MzczMzk0MC4xNzM4MjI3NjU5*_ga_WH2QY8WWF5*MTc0NDI2NTQ4NC40My4xLjE3NDQyNjY2NTUuMzMuMC4w
+
 
 9.  Enable HTTPS with Certbot (Let's Encrypt)
 ```
@@ -583,7 +581,7 @@ sudo visudo
 Run whoami for username
 
 ```
-moseimbahale ALL=(ALL) NOPASSWD: ALL
+moseimbahale0 ALL=(ALL) NOPASSWD: ALL
 
 ```
 
